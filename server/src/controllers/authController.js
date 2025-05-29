@@ -62,6 +62,13 @@ const register = async (req, res, next) => {
     if (!password) throw new UserPasswordNotProvided();
     if (!username) throw new UserNameNotProvided();
 
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+	if (!passwordRegex.test(password)) {
+		return res.status(400).json({
+			error: "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número."
+		});
+	}
+
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
 
